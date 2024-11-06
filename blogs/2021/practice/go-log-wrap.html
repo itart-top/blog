@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Go 日志组件封装 | 艺术码农的小栈</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="description" content="IT是一门艺术">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    
+    <link rel="preload" href="/assets/css/0.styles.fd6f0cf4.css" as="style"><link rel="preload" href="/assets/js/app.c8fdef3b.js" as="script"><link rel="preload" href="/assets/js/4.20b8dc2f.js" as="script"><link rel="preload" href="/assets/js/1.fa01cbc2.js" as="script"><link rel="preload" href="/assets/js/69.b90973ab.js" as="script"><link rel="prefetch" href="/assets/js/10.a1e795ad.js"><link rel="prefetch" href="/assets/js/11.2e9a3677.js"><link rel="prefetch" href="/assets/js/12.bbe32e2b.js"><link rel="prefetch" href="/assets/js/13.5502daed.js"><link rel="prefetch" href="/assets/js/14.38dcf463.js"><link rel="prefetch" href="/assets/js/15.fb7c17bd.js"><link rel="prefetch" href="/assets/js/16.98c5f335.js"><link rel="prefetch" href="/assets/js/17.0409f042.js"><link rel="prefetch" href="/assets/js/18.ee983ab6.js"><link rel="prefetch" href="/assets/js/19.fb96f26a.js"><link rel="prefetch" href="/assets/js/20.1532e362.js"><link rel="prefetch" href="/assets/js/21.159b0d00.js"><link rel="prefetch" href="/assets/js/22.6e4989ec.js"><link rel="prefetch" href="/assets/js/23.1d395814.js"><link rel="prefetch" href="/assets/js/24.28365411.js"><link rel="prefetch" href="/assets/js/25.17081ffd.js"><link rel="prefetch" href="/assets/js/26.ae364031.js"><link rel="prefetch" href="/assets/js/27.0a649aa4.js"><link rel="prefetch" href="/assets/js/28.6d3fd28e.js"><link rel="prefetch" href="/assets/js/29.54d412f9.js"><link rel="prefetch" href="/assets/js/3.c289fb76.js"><link rel="prefetch" href="/assets/js/30.6cca7879.js"><link rel="prefetch" href="/assets/js/31.aa9e490d.js"><link rel="prefetch" href="/assets/js/32.eac5c260.js"><link rel="prefetch" href="/assets/js/33.57270104.js"><link rel="prefetch" href="/assets/js/34.feb8de9f.js"><link rel="prefetch" href="/assets/js/35.e3e89b43.js"><link rel="prefetch" href="/assets/js/36.36b2fc3b.js"><link rel="prefetch" href="/assets/js/37.c9f380d0.js"><link rel="prefetch" href="/assets/js/38.d37be319.js"><link rel="prefetch" href="/assets/js/39.89b45652.js"><link rel="prefetch" href="/assets/js/40.5d6790c8.js"><link rel="prefetch" href="/assets/js/41.0d249eb4.js"><link rel="prefetch" href="/assets/js/42.8e672f57.js"><link rel="prefetch" href="/assets/js/43.11b071b5.js"><link rel="prefetch" href="/assets/js/44.de061203.js"><link rel="prefetch" href="/assets/js/45.0e43e801.js"><link rel="prefetch" href="/assets/js/46.7ba4f974.js"><link rel="prefetch" href="/assets/js/47.6266f807.js"><link rel="prefetch" href="/assets/js/48.b3fbb3eb.js"><link rel="prefetch" href="/assets/js/49.4631f8e8.js"><link rel="prefetch" href="/assets/js/5.f8b726c1.js"><link rel="prefetch" href="/assets/js/50.ef29e8f7.js"><link rel="prefetch" href="/assets/js/51.ebea927a.js"><link rel="prefetch" href="/assets/js/52.b1caaa7d.js"><link rel="prefetch" href="/assets/js/53.5de5c47b.js"><link rel="prefetch" href="/assets/js/54.3bdf53fe.js"><link rel="prefetch" href="/assets/js/55.7da8ef79.js"><link rel="prefetch" href="/assets/js/56.46e87e80.js"><link rel="prefetch" href="/assets/js/57.6f96543e.js"><link rel="prefetch" href="/assets/js/58.22d758b8.js"><link rel="prefetch" href="/assets/js/59.11c20834.js"><link rel="prefetch" href="/assets/js/6.be26a4fd.js"><link rel="prefetch" href="/assets/js/60.fadd241e.js"><link rel="prefetch" href="/assets/js/61.7f8e6a2a.js"><link rel="prefetch" href="/assets/js/62.57558e1c.js"><link rel="prefetch" href="/assets/js/63.dee2ee4f.js"><link rel="prefetch" href="/assets/js/64.effa3740.js"><link rel="prefetch" href="/assets/js/65.d585eb74.js"><link rel="prefetch" href="/assets/js/66.7c071d8b.js"><link rel="prefetch" href="/assets/js/67.45ed2354.js"><link rel="prefetch" href="/assets/js/68.058c388c.js"><link rel="prefetch" href="/assets/js/7.6051ac3d.js"><link rel="prefetch" href="/assets/js/70.61be294c.js"><link rel="prefetch" href="/assets/js/71.6a22305f.js"><link rel="prefetch" href="/assets/js/72.6a6c95b7.js"><link rel="prefetch" href="/assets/js/73.eeb753c1.js"><link rel="prefetch" href="/assets/js/74.2590448f.js"><link rel="prefetch" href="/assets/js/75.65f5b3d3.js"><link rel="prefetch" href="/assets/js/76.db8b2024.js"><link rel="prefetch" href="/assets/js/77.81cc1708.js"><link rel="prefetch" href="/assets/js/78.0f4d4437.js"><link rel="prefetch" href="/assets/js/79.bba246a8.js"><link rel="prefetch" href="/assets/js/8.38cc15eb.js"><link rel="prefetch" href="/assets/js/9.938b90fb.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.fd6f0cf4.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar" data-v-1156296a><div data-v-1156296a><div id="loader-wrapper" class="loading-wrapper" data-v-d48f4d20 data-v-1156296a data-v-1156296a><div class="loader-main" data-v-d48f4d20><div data-v-d48f4d20></div><div data-v-d48f4d20></div><div data-v-d48f4d20></div><div data-v-d48f4d20></div></div> <!----> <!----></div> <div class="password-shadow password-wrapper-out" style="display:none;" data-v-4e82dffc data-v-1156296a data-v-1156296a><h3 class="title" data-v-4e82dffc data-v-4e82dffc>艺术码农的小栈</h3> <p class="description" data-v-4e82dffc data-v-4e82dffc>IT是一门艺术</p> <label id="box" class="inputBox" data-v-4e82dffc data-v-4e82dffc><input type="password" value="" data-v-4e82dffc> <span data-v-4e82dffc>Konck! Knock!</span> <button data-v-4e82dffc>OK</button></label> <div class="footer" data-v-4e82dffc data-v-4e82dffc><span data-v-4e82dffc><i class="iconfont reco-theme" data-v-4e82dffc></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-4e82dffc>vuePress-theme-reco</a></span> <span data-v-4e82dffc><i class="iconfont reco-copyright" data-v-4e82dffc></i> <a data-v-4e82dffc><span data-v-4e82dffc>Hyman</span>
+            
+          <span data-v-4e82dffc>2009 - </span>
+          2024
+        </a></span></div></div> <div class="hide" data-v-1156296a><header class="navbar" data-v-1156296a><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/logo.png" alt="艺术码农的小栈" class="logo"> <span class="site-name">艺术码农的小栈</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      随手笔记
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/实践总结/" class="nav-link"><i class="undefined"></i>
+  实践总结
+</a></li><li class="dropdown-item"><!----> <a href="/categories/K8S/" class="nav-link"><i class="undefined"></i>
+  K8S
+</a></li><li class="dropdown-item"><!----> <a href="/categories/笔记/" class="nav-link"><i class="undefined"></i>
+  笔记
+</a></li><li class="dropdown-item"><!----> <a href="/categories/探索/" class="nav-link"><i class="undefined"></i>
+  探索
+</a></li><li class="dropdown-item"><!----> <a href="/categories/转载/" class="nav-link"><i class="undefined"></i>
+  转载
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  TimeLine
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      主页
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/itart-top" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://blog.csdn.net/piaohai" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-csdn"></i>
+  CSDN
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-1156296a></div> <aside class="sidebar" data-v-1156296a><div class="personal-info-wrapper" data-v-828910c6 data-v-1156296a><img src="/avatar.png" alt="author-avatar" class="personal-img" data-v-828910c6> <h3 class="name" data-v-828910c6>
+    Hyman
+  </h3> <div class="num" data-v-828910c6><div data-v-828910c6><h3 data-v-828910c6>69</h3> <h6 data-v-828910c6>文章</h6></div> <div data-v-828910c6><h3 data-v-828910c6>30</h3> <h6 data-v-828910c6>标签</h6></div></div> <ul class="social-links" data-v-828910c6></ul> <hr data-v-828910c6></div> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      随手笔记
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/实践总结/" class="nav-link"><i class="undefined"></i>
+  实践总结
+</a></li><li class="dropdown-item"><!----> <a href="/categories/K8S/" class="nav-link"><i class="undefined"></i>
+  K8S
+</a></li><li class="dropdown-item"><!----> <a href="/categories/笔记/" class="nav-link"><i class="undefined"></i>
+  笔记
+</a></li><li class="dropdown-item"><!----> <a href="/categories/探索/" class="nav-link"><i class="undefined"></i>
+  探索
+</a></li><li class="dropdown-item"><!----> <a href="/categories/转载/" class="nav-link"><i class="undefined"></i>
+  转载
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  TimeLine
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      主页
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/itart-top" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://blog.csdn.net/piaohai" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-csdn"></i>
+  CSDN
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav> <!----> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-4e82dffc data-v-1156296a><h3 class="title" data-v-4e82dffc data-v-4e82dffc>Go 日志组件封装</h3> <!----> <label id="box" class="inputBox" data-v-4e82dffc data-v-4e82dffc><input type="password" value="" data-v-4e82dffc> <span data-v-4e82dffc>Konck! Knock!</span> <button data-v-4e82dffc>OK</button></label> <div class="footer" data-v-4e82dffc data-v-4e82dffc><span data-v-4e82dffc><i class="iconfont reco-theme" data-v-4e82dffc></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-4e82dffc>vuePress-theme-reco</a></span> <span data-v-4e82dffc><i class="iconfont reco-copyright" data-v-4e82dffc></i> <a data-v-4e82dffc><span data-v-4e82dffc>Hyman</span>
+            
+          <span data-v-4e82dffc>2009 - </span>
+          2024
+        </a></span></div></div> <div data-v-1156296a><main class="page"><section><div class="page-title"><h1 class="title">Go 日志组件封装</h1> <div data-v-1ff7123e><i class="iconfont reco-account" data-v-1ff7123e><span data-v-1ff7123e>Hyman</span></i> <i class="iconfont reco-date" data-v-1ff7123e><span data-v-1ff7123e>2021/10/28</span></i> <!----> <i class="tags iconfont reco-tag" data-v-1ff7123e><span class="tag-item" data-v-1ff7123e>实践总结</span><span class="tag-item" data-v-1ff7123e>Go</span></i></div></div> <div class="theme-reco-content content__default"><h2 id="背景"><a href="#背景" class="header-anchor">#</a> 背景</h2> <p>Go目前流行多个日志组件：logrus、zap、zerolog、seelog，他们有各自的优点，但是使用方式存在差异， 如何屏蔽这些差异，对外提供统一的接口，减少对具体的日志组件依赖，从而方便后续组件替换？</p> <p>对此，我们可以增加一层防腐层，定义一套统一的日志接口，业务代码不直接依赖具体的日志实现，而是依赖抽象接口，这样就可以将具体的实现进行隔离，业务代码就不会包含具体日志组件相关的代码，当日志组件需要替换时，只要做一层适配，实现约定好的日志接口方法，就可以无缝进行切换日志组件。</p> <h2 id="方案"><a href="#方案" class="header-anchor">#</a> 方案</h2> <h3 id="定义日志接口"><a href="#定义日志接口" class="header-anchor">#</a> 定义日志接口</h3> <p>我们需要预先定义好一套完整的日志接口：</p> <p>log/log.go</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">package</span> log
+
+<span class="token keyword">type</span> Fields <span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span> 
+
+<span class="token keyword">type</span> Logger <span class="token keyword">interface</span> <span class="token punctuation">{</span>
+	<span class="token function">WithField</span><span class="token punctuation">(</span>key <span class="token builtin">string</span><span class="token punctuation">,</span> value <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> Logger
+	<span class="token function">WithFields</span><span class="token punctuation">(</span>fields Fields<span class="token punctuation">)</span> Logger
+	<span class="token function">Trace</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Tracef</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Debug</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Debugf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Info</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Infof</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Warn</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Warnf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Error</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Errorf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Panic</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Panicf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Fatal</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+	<span class="token function">Fatalf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><p>接口包含日常使用的所有方法，接口没有任何的外部依赖。</p> <p>接口定义放在独立的log包下，不需要担心包名和原来的日志冲突，因为到时会替换所有的日志组件</p> <p><strong>定义全局日志</strong></p> <p>日志组件一般会有一个全局默认的实例，使用的时候直接调用包下对应的函数，例如：</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code>log<span class="token punctuation">.</span><span class="token function">Info</span><span class="token punctuation">(</span><span class="token string">&quot;hello world&quot;</span><span class="token punctuation">)</span>
+log<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span><span class="token string">&quot;hello world&quot;</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>所以我们同样定义一套包级别的导出方法：</p> <p>log/exported.go</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">package</span> log
+
+<span class="token keyword">var</span> std Logger <span class="token comment">// 标准输出</span>
+
+<span class="token keyword">func</span> <span class="token function">WithField</span><span class="token punctuation">(</span>key <span class="token builtin">string</span><span class="token punctuation">,</span> value <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> Logger <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> std<span class="token punctuation">.</span><span class="token function">WithField</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">WithFields</span><span class="token punctuation">(</span>fields Fields<span class="token punctuation">)</span> Logger <span class="token punctuation">{</span>
+	<span class="token keyword">return</span> std<span class="token punctuation">.</span><span class="token function">WithFields</span><span class="token punctuation">(</span>fields<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Trace</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Trace</span><span class="token punctuation">(</span>args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Tracef</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Tracef</span><span class="token punctuation">(</span>format<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Debug</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Debug</span><span class="token punctuation">(</span>args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Debugf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Debugf</span><span class="token punctuation">(</span>format<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Info</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Info</span><span class="token punctuation">(</span>args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Infof</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Infof</span><span class="token punctuation">(</span>format<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Warn</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Warn</span><span class="token punctuation">(</span>args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Warnf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Warnf</span><span class="token punctuation">(</span>format<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Error</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Error</span><span class="token punctuation">(</span>args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Errorf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span>format<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Panic</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Panic</span><span class="token punctuation">(</span>args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Panicf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Panicf</span><span class="token punctuation">(</span>format<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Fatal</span><span class="token punctuation">(</span>args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Fatal</span><span class="token punctuation">(</span>args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">Fatalf</span><span class="token punctuation">(</span>format <span class="token builtin">string</span><span class="token punctuation">,</span> args <span class="token operator">...</span><span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	std<span class="token punctuation">.</span><span class="token function">Fatalf</span><span class="token punctuation">(</span>format<span class="token punctuation">,</span> args<span class="token operator">...</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 初始化全局日志</span>
+<span class="token keyword">func</span> <span class="token function">InitGlobal</span><span class="token punctuation">(</span>s Logger<span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+	std <span class="token operator">=</span> s
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br></div></div><p>注意：</p> <ul><li>全局日志使用前需要调用初始化方法：InitGlobal(s Logger)</li> <li>exported.go同样也是不依赖具体实现，只依赖接口Logger</li></ul> <h3 id="适配logrus组件"><a href="#适配logrus组件" class="header-anchor">#</a> 适配Logrus组件</h3> <p>如果项目要使用Logrus时，我们可以对Logrus做一层适配，实现我们的定义好的接口:</p> <p>log/logrus.go</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>/**
+ * @Title Logrus适配
+ * @Description
+ * @Author hyman
+ * @Date 2021-10-26
+ **/
+package log
+
+import (
+	&quot;github.com/sirupsen/logrus&quot;
+)
+
+type logrusAdapt struct {
+	l *logrus.Logger
+}
+
+func (s logrusAdapt) WithField(key string, value interface{}) Logger {
+	return newFieldAdapt(s.l.WithField(key, value))
+}
+
+func (s logrusAdapt) Tracef(format string, args ...interface{}) {
+	s.l.Tracef(format, args...)
+}
+
+func (s logrusAdapt) Debugf(format string, args ...interface{}) {
+	s.l.Debugf(format, args...)
+}
+
+func (s logrusAdapt) Infof(format string, args ...interface{}) {
+	s.l.Infof(format, args...)
+}
+
+func (s logrusAdapt) Warnf(format string, args ...interface{}) {
+	s.l.Warnf(format, args...)
+}
+
+func (s logrusAdapt) Errorf(format string, args ...interface{}) {
+	s.l.Errorf(format, args...)
+}
+
+func (s logrusAdapt) Panicf(format string, args ...interface{}) {
+	s.l.Panicf(format, args...)
+}
+
+func (s logrusAdapt) Fatalf(format string, args ...interface{}) {
+	s.l.Fatalf(format, args...)
+}
+
+func (s logrusAdapt) WithFields(fields Fields) Logger {
+	return newFieldAdapt(s.l.WithFields(logrus.Fields(fields)))
+}
+
+func (s logrusAdapt) Trace(args ...interface{}) {
+	s.l.Trace(args...)
+}
+
+func (s logrusAdapt) Debug(args ...interface{}) {
+	s.l.Debug(args...)
+}
+
+func (s logrusAdapt) Print(args ...interface{}) {
+	s.l.Print(args...)
+}
+
+func (s logrusAdapt) Info(args ...interface{}) {
+	s.l.Info(args...)
+}
+
+func (s logrusAdapt) Warn(args ...interface{}) {
+	s.l.Warn(args...)
+}
+
+func (s logrusAdapt) Error(args ...interface{}) {
+	s.l.Error(args...)
+}
+
+func (s logrusAdapt) Panic(args ...interface{}) {
+	s.l.Panic(args...)
+}
+
+func (s logrusAdapt) Fatal(args ...interface{}) {
+	s.l.Fatal(args...)
+}
+// 封装logrus.Entry
+type fieldAdapt struct {
+	e *logrus.Entry
+}
+
+func (f fieldAdapt) WithField(key string, value interface{}) Logger {
+	return newFieldAdapt(f.e.WithField(key, value))
+}
+
+func (f fieldAdapt) WithFields(fields Fields) Logger {
+	return newFieldAdapt(f.e.WithFields(logrus.Fields(fields)))
+}
+
+func (f fieldAdapt) Tracef(format string, args ...interface{}) {
+	panic(&quot;implement me&quot;)
+}
+
+func (f fieldAdapt) WithError(err error) Logger {
+	return newFieldAdapt(f.e.WithError(err))
+}
+
+func (f fieldAdapt) Debugf(format string, args ...interface{}) {
+	f.e.Debugf(format, args...)
+}
+
+func (f fieldAdapt) Infof(format string, args ...interface{}) {
+	f.e.Infof(format, args...)
+}
+
+func (f fieldAdapt) Printf(format string, args ...interface{}) {
+	f.e.Printf(format, args...)
+}
+
+func (f fieldAdapt) Warnf(format string, args ...interface{}) {
+	f.e.Warnf(format, args...)
+}
+
+func (f fieldAdapt) Warningf(format string, args ...interface{}) {
+	f.e.Warningf(format, args...)
+}
+
+func (f fieldAdapt) Errorf(format string, args ...interface{}) {
+	f.e.Errorf(format, args...)
+}
+
+func (f fieldAdapt) Fatalf(format string, args ...interface{}) {
+	f.e.Fatalf(format, args...)
+}
+
+func (f fieldAdapt) Panicf(format string, args ...interface{}) {
+	f.e.Panicf(format, args...)
+}
+
+func (f fieldAdapt) Debug(args ...interface{}) {
+	f.e.Debug(args...)
+}
+
+func (f fieldAdapt) Info(args ...interface{}) {
+	f.e.Info(args...)
+}
+
+func (f fieldAdapt) Print(args ...interface{}) {
+	f.e.Print(args...)
+}
+
+func (f fieldAdapt) Warn(args ...interface{}) {
+	f.e.Warn(args...)
+}
+
+func (f fieldAdapt) Warning(args ...interface{}) {
+	f.e.Warning(args...)
+}
+
+func (f fieldAdapt) Error(args ...interface{}) {
+	f.e.Error(args...)
+}
+
+func (f fieldAdapt) Fatal(args ...interface{}) {
+	f.e.Fatal(args...)
+}
+
+func (f fieldAdapt) Panic(args ...interface{}) {
+	f.e.Panic(args...)
+}
+
+func (f fieldAdapt) Debugln(args ...interface{}) {
+	f.e.Debugln(args...)
+}
+
+func (f fieldAdapt) Infoln(args ...interface{}) {
+	f.e.Infoln(args...)
+}
+
+func (f fieldAdapt) Println(args ...interface{}) {
+	f.e.Println(args...)
+}
+
+func (f fieldAdapt) Warnln(args ...interface{}) {
+	f.e.Warnln(args...)
+}
+
+func (f fieldAdapt) Warningln(args ...interface{}) {
+	f.e.Warningln(args...)
+}
+
+func (f fieldAdapt) Errorln(args ...interface{}) {
+	f.e.Errorln(args...)
+}
+
+func (f fieldAdapt) Fatalln(args ...interface{}) {
+	f.e.Fatalln(args...)
+}
+
+func (f fieldAdapt) Panicln(args ...interface{}) {
+	f.e.Panicln(args...)
+}
+
+func (f fieldAdapt) Trace(args ...interface{}) {
+	f.e.Trace(args...)
+}
+
+func newFieldAdapt(e *logrus.Entry) Logger {
+	return fieldAdapt{e}
+}
+
+func NewLogrusAdapt(l *logrus.Logger) Logger {
+	return &amp;logrusAdapt{
+		l: l,
+	}
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br><span class="line-number">190</span><br><span class="line-number">191</span><br><span class="line-number">192</span><br><span class="line-number">193</span><br><span class="line-number">194</span><br><span class="line-number">195</span><br><span class="line-number">196</span><br><span class="line-number">197</span><br><span class="line-number">198</span><br><span class="line-number">199</span><br><span class="line-number">200</span><br><span class="line-number">201</span><br><span class="line-number">202</span><br><span class="line-number">203</span><br><span class="line-number">204</span><br><span class="line-number">205</span><br><span class="line-number">206</span><br><span class="line-number">207</span><br><span class="line-number">208</span><br><span class="line-number">209</span><br><span class="line-number">210</span><br><span class="line-number">211</span><br><span class="line-number">212</span><br><span class="line-number">213</span><br></div></div><p>适配器只是对logrus实例进行轻量级封装，采用组合方式，不会破坏原有逻辑。</p> <p>logrus的WithField功能比较特别，返回的是logrus.Entry对象，所以还需要对logrus.Entry进行适配：fieldAdapt</p> <h3 id="项目使用"><a href="#项目使用" class="header-anchor">#</a> 项目使用</h3> <p>封装好后，要如何使用？</p> <p>首先一般我们是在main.go中实例化我们的日志对象</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">&quot;github.com/sirupsen/logrus&quot;</span>
+	<span class="token string">&quot;log/log&quot;</span>
+<span class="token punctuation">)</span>
+<span class="token comment">// 全局日志实例</span>
+log<span class="token punctuation">.</span><span class="token function">InitGlobal</span><span class="token punctuation">(</span>log<span class="token punctuation">.</span><span class="token function">NewLogrusAdapt</span><span class="token punctuation">(</span>logrus<span class="token punctuation">.</span><span class="token function">StandardLogger</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// 初始化</span>
+<span class="token comment">// 自定义日志实例</span>
+<span class="token keyword">var</span> customLog <span class="token operator">=</span> log<span class="token punctuation">.</span><span class="token function">NewLogrusAdapt</span><span class="token punctuation">(</span>logrus<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>我们只是对组件进行适配，组件的配置还是和原来保持一样，例如：日志输出，级别等</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code>logrusLog <span class="token operator">:=</span> logrus<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+logrusLog<span class="token punctuation">.</span><span class="token function">SetLevel</span><span class="token punctuation">(</span>logrus<span class="token punctuation">.</span>InfoLevel<span class="token punctuation">)</span>
+src<span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">OpenFile</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span>DevNull<span class="token punctuation">,</span> os<span class="token punctuation">.</span>O_CREATE<span class="token operator">|</span>os<span class="token punctuation">.</span>O_APPEND<span class="token operator">|</span>os<span class="token punctuation">.</span>O_WRONLY<span class="token punctuation">,</span> <span class="token number">0644</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+	<span class="token function">panic</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+writer <span class="token operator">:=</span> bufio<span class="token punctuation">.</span><span class="token function">NewWriter</span><span class="token punctuation">(</span>src<span class="token punctuation">)</span>
+logrusLog<span class="token punctuation">.</span><span class="token function">SetOutput</span><span class="token punctuation">(</span>writer<span class="token punctuation">)</span>
+customLog<span class="token operator">:=</span>log<span class="token punctuation">.</span><span class="token function">NewLogrusAdapt</span><span class="token punctuation">(</span>logrusLog<span class="token punctuation">)</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div><p>注：一般情况下项目只有main.go才会和具体日志组件有耦合，其他地方只会和logger接口进行关联，后续需要替换日志组件，只需要修改main.go。</p> <p><strong>全局日志调用</strong></p> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">&quot;log/log&quot;</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">func</span> <span class="token function">Hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  log<span class="token punctuation">.</span><span class="token function">Info</span><span class="token punctuation">(</span><span class="token string">&quot;hellow world&quot;</span><span class="token punctuation">)</span> <span class="token comment">// 调用</span>
+<span class="token punctuation">}</span>
+
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><p><strong>自定义日志调用</strong></p> <p>一般通过注入方式，把具体日志实例注入到模块中，然后在模块中使用：</p> <p>main.go</p> <div class="language- line-numbers-mode"><pre class="language-text"><code>customLog:=log.NewLogrusAdapt(logrusLog)
+business:= NewBusiness(customLog)
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br></div></div><p>business.go</p> <div class="language-go line-numbers-mode"><pre class="language-go"><code><span class="token keyword">import</span> <span class="token punctuation">(</span>
+	<span class="token string">&quot;log/log&quot;</span>
+<span class="token punctuation">)</span>
+<span class="token keyword">type</span> Business <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+  log log<span class="token punctuation">.</span>Logger
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token punctuation">(</span>r <span class="token operator">*</span>Business<span class="token punctuation">)</span> <span class="token function">SayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  r<span class="token punctuation">.</span>log<span class="token punctuation">.</span><span class="token function">Info</span><span class="token punctuation">(</span><span class="token string">&quot;say hello&quot;</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">func</span> <span class="token function">NewBusiness</span><span class="token punctuation">(</span>log log<span class="token punctuation">.</span>Logger<span class="token punctuation">)</span> <span class="token operator">*</span>Business <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token operator">&amp;</span>Business<span class="token punctuation">{</span>log<span class="token punctuation">:</span> log<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><h3 id="组件替换"><a href="#组件替换" class="header-anchor">#</a> 组件替换</h3> <p>后续如果需要替换日志组件只需要增加对应的适配器，实现指定的接口，然后修改main.go中的实例方法就可以达到日志替换的目的。</p></div></section> <footer class="page-edit"><!----> <!----></footer> <!----> <div class="comments-wrapper"><!----></div> <ul class="side-bar sub-sidebar-wrapper" style="width:12rem;" data-v-70334359><li class="level-2" data-v-70334359><a href="/blogs/2021/practice/go-log-wrap.html#背景" class="sidebar-link reco-side-背景" data-v-70334359>背景</a></li><li class="level-2" data-v-70334359><a href="/blogs/2021/practice/go-log-wrap.html#方案" class="sidebar-link reco-side-方案" data-v-70334359>方案</a></li><li class="level-3" data-v-70334359><a href="/blogs/2021/practice/go-log-wrap.html#定义日志接口" class="sidebar-link reco-side-定义日志接口" data-v-70334359>定义日志接口</a></li><li class="level-3" data-v-70334359><a href="/blogs/2021/practice/go-log-wrap.html#适配logrus组件" class="sidebar-link reco-side-适配logrus组件" data-v-70334359>适配Logrus组件</a></li><li class="level-3" data-v-70334359><a href="/blogs/2021/practice/go-log-wrap.html#项目使用" class="sidebar-link reco-side-项目使用" data-v-70334359>项目使用</a></li><li class="level-3" data-v-70334359><a href="/blogs/2021/practice/go-log-wrap.html#组件替换" class="sidebar-link reco-side-组件替换" data-v-70334359>组件替换</a></li></ul></main> <!----></div></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/assets/js/app.c8fdef3b.js" defer></script><script src="/assets/js/4.20b8dc2f.js" defer></script><script src="/assets/js/1.fa01cbc2.js" defer></script><script src="/assets/js/69.b90973ab.js" defer></script>
+  </body>
+</html>
